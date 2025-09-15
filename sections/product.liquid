@@ -1,7 +1,28 @@
 <div>
-<h1>{{ product.title }}</h1>
+<h1 class="product-title">{{ product.title }}</h1>
 
-<img src="{{ product.featured_image}}">
+<img class="product-image"
+   src="{{ product.featured_image | image_url:width :600, height: 600}}" height="600" width="600">
+
+   {% form 'product', product %}
+
+    <input type="text" name="quantity" min="1" value="1">
+
+     <select name="id">
+      {% for variant in product.variants %}
+        <option
+          value="{{ variant.id }}"
+          {% if variant == current_variant %}
+            selected="selected"
+          {% endif %}
+        >
+          {{ variant.title }} - {{ variant.price | money }}
+        </option>
+      {% endfor %}
+    </select>
+    
+    <button type="submit">Add to cart</button>
+    {% endform %}
   </div>
 
 {% comment %}
