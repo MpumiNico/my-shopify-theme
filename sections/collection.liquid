@@ -5,7 +5,7 @@
   https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
 {% endcomment %}
 
-<h1>{{ collection.title }}</h1>
+<h1 class="collection-title">{{ collection.title }}</h1>
 
 <div class="collection-products">
   {% paginate collection.products by 20 %}
@@ -22,8 +22,32 @@
           %}
         {% endif %}
         <div class="collection-product__content">
-          <p>{{ product.title | escape | link_to: product.url }}</p>
-          <p>{{ product.price | money }}</p>
+          <p class="collection-product__title">
+            <a href="{{ product.url }}" class="product-title-link">{{ product.title | escape }}</a>
+          </p>
+          <p class="collection-product__price">{{ product.price | money }}</p>
+          {% assign color_option = product.options_with_values | where: "name", "Color" | first %}
+          {% if color_option %}
+            <div class="collection-product__colors">
+              {% assign shown_colors = 0 %}
+              {% for color in color_option.values %}
+                {% assign color_downcase = color | downcase %}
+                {% if color_downcase == 'black' or color_downcase == 'white' or color_downcase == 'blue' %}
+                  {% assign shown_colors = shown_colors | plus: 1 %}
+                  {% if color_downcase == 'black' %}
+                    <span class="color-dot" style="background-color: #000;" title="Black"></span>
+                  {% elsif color_downcase == 'white' %}
+                    <span class="color-dot" style="background-color: #fff; border: 1px solid #bbb;" title="White"></span>
+                  {% elsif color_downcase == 'blue' %}
+                    <span class="color-dot" style="background-color: #0074d9;" title="Blue"></span>
+                  {% endif %}
+                {% endif %}
+                {% if shown_colors == 3 %}
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
         </div>
       </div>
     {% endfor %}
@@ -33,9 +57,108 @@
 </div>
 
 {% stylesheet %}
+  .collection-title {
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: bold;
+    margin: 1em 0 1.5em 0;
+    background: linear-gradient(90deg, #ff6a00, #ee0979, #00c3ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    letter-spacing: 1px;
+  }
   .collection-products {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 2em;
+    padding: 2em 0;
+  }
+  .collection-product {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: box-shadow 0.2s;
+    padding: 1.2em;
+  }
+  .collection-product:hover {
+    box-shadow: 0 4px 18px rgba(0,0,0,0.10);
+  }
+  .collection-product__image {
+    width: 100%;
+    max-width: 220px;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1em;
+  }
+  .collection-product__content {
+    width: 100%;
+    text-align: center;
+  }
+  .collection-product__title {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 0.3em;
+    color: #222;
+  }
+  .product-title-link {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s;
+  }
+  .product-title-link:hover {
+    color: #ee0979;
+  }
+  .collection-product__price {
+    color: #1a1a1a;
+    font-size: 1.05em;
+    font-weight: 600;
+    margin-bottom: 0.2em;
+  }
+  .collection-product__colors {
+    display: flex;
+    gap: 0.3em;
+    justify-content: center;
+    margin-top: 0.5em;
+  }
+  .color-dot {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    background: #eee;
+  }
+  .color-dot--more {
+    background: #f5f5f5;
+    color: #555;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 3px;
+  }
+  @media (max-width: 700px) {
+    .collection-products {
+      grid-template-columns: 1fr;
+      gap: 1em;
+      padding: 1em 0;
+    }
+    .collection-product {
+      padding: 1em;
+    }
+    .collection-title {
+      font-size: 2em;
+    }
   }
 {% endstylesheet %}
 

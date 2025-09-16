@@ -1,29 +1,130 @@
-<div>
-<h1 class="product-title">{{ product.title }}</h1>
+<div class="product-card">
+  <div class="product-card__image-wrap">
+    <img class="product-card__image"
+      src="{{ product.featured_image | image_url:width:600, height:600 }}"
+      height="600" width="600" alt="{{ product.title }}">
+  </div>
+  <div class="product-card__details">
+    <h1 class="product-card__title">{{ product.title }}</h1>
+    <p class="product-card__price">
+      {{ product.price | money }}
+    </p>
+    {% if product.description %}
+      <p class="product-card__desc">{{ product.description | strip_html | truncatewords: 30 }}</p>
+    {% endif %}
 
-<img class="product-image"
-   src="{{ product.featured_image | image_url:width :600, height: 600}}" height="600" width="600">
-
-   {% form 'product', product %}
-
-    <input type="text" name="quantity" min="1" value="1">
-
-     <select name="id">
-      {% for variant in product.variants %}
-        <option
-          value="{{ variant.id }}"
-          {% if variant == current_variant %}
-            selected="selected"
-          {% endif %}
-        >
-          {{ variant.title }} - {{ variant.price | money }}
-        </option>
-      {% endfor %}
-    </select>
-    
-    <button type="submit">Add to cart</button>
+    {% form 'product', product %}
+      <div class="product-card__form-row">
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" name="quantity" min="1" value="1" class="product-card__qty">
+      </div>
+      <div class="product-card__form-row">
+        <label for="variant">Variant</label>
+        <select name="id" id="variant" class="product-card__select">
+          {% for variant in product.variants %}
+            <option
+              value="{{ variant.id }}"
+              {% if variant == current_variant %}
+                selected="selected"
+              {% endif %}
+            >
+              {{ variant.title }} - {{ variant.price | money }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="product-card__add-btn">Add to cart</button>
     {% endform %}
   </div>
+</div>
+
+{% stylesheet %}
+.product-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  padding: 2em;
+  max-width: 800px;
+  margin: 2em auto;
+}
+.product-card__image-wrap {
+  flex: 1 1 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.product-card__image {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+}
+.product-card__details {
+  flex: 1 1 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  justify-content: center;
+}
+.product-card__title {
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 0.2em;
+}
+.product-card__price {
+  font-size: 1.3em;
+  color: #1a1a1a;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+.product-card__desc {
+  color: #555;
+  font-size: 1em;
+  margin-bottom: 1em;
+}
+.product-card__form-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1em;
+}
+.product-card__qty,
+.product-card__select {
+  padding: 0.5em;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1em;
+  margin-top: 0.3em;
+}
+.product-card__add-btn {
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.8em 2em;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.product-card__add-btn:hover {
+  background: #444;
+}
+@media (max-width: 700px) {
+  .product-card {
+    flex-direction: column;
+    padding: 1em;
+  }
+  .product-card__image-wrap,
+  .product-card__details {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+{% endstylesheet %}
 
 {% comment %}
   This section is used in the product template to render product page with
@@ -31,42 +132,6 @@
 
   https://shopify.dev/docs/storefronts/themes/architecture/templates/product
 {% endcomment %}
-
-{% comment %} <div class="product-images">
-  {% for image in product.images %}
-    {% render 'image', class: 'product-image', image: image %}
-  {% endfor %}
-</div>
-
-<div class="product-info">
-  <h1>{{ product.title }}</h1>
-  <p>{{ product.price | money }}</p>
-  <p>{{ product.description }}</p>
-</div>
-
-<div class="product-form">
-  {% form 'product', product %}
-    {% assign current_variant = product.selected_or_first_available_variant %}
-
-    <select name="id">
-      {% for variant in product.variants %}
-        <option
-          value="{{ variant.id }}"
-          {% if variant == current_variant %}
-            selected="selected"
-          {% endif %}
-        >
-          {{ variant.title }} - {{ variant.price | money }}
-        </option>
-      {% endfor %}
-    </select>
-
-    <input type="text" name="quantity" min="1" value="1">
-
-    <input type="submit" value="Add to cart">
-    {{ form | payment_button }}
-  {% endform %}
-</div>
 
 {% schema %}
 {
@@ -76,4 +141,4 @@
     "groups": ["header", "footer"]
   }
 }
-{% endschema %} {% endcomment %}
+{% endschema %}
