@@ -5,7 +5,7 @@
   https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
 {% endcomment %}
 
-<h1>{{ 'collections.title' | t }}</h1>
+<h1 class="collections-title">{{ 'collections.title' | t }}</h1>
 
 <div
   class="collections {{ section.settings.grid_item_width }}"
@@ -14,13 +14,15 @@
   {% for collection in collections %}
     <a class="collection-card" href="{{ collection.url }}">
       {% if collection.featured_image %}
-        {% render 'image',
-          class: 'collection-card__image',
-          image: collection.featured_image,
-          width: 600,
-          height: 600,
-          crop: 'center'
-        %}
+        <div class="collection-card__image-wrap">
+          {% render 'image',
+            class: 'collection-card__image',
+            image: collection.featured_image,
+            width: 600,
+            height: 600,
+            crop: 'center'
+          %}
+        </div>
       {% endif %}
 
       <div class="collection-card__content">
@@ -56,6 +58,18 @@
 </div>
 
 {% stylesheet %}
+  .collections-title {
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: bold;
+    margin: 1em 0 1.5em 0;
+    background: linear-gradient(90deg, #ff6a00, #ee0979, #00c3ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    letter-spacing: 1px;
+  }
   .collections {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(var(--collection-card-size), 100%), 1fr));
@@ -83,10 +97,20 @@
   .collection-card:hover {
     box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   }
+  .collection-card__image-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fafafa;
+  }
   .collection-card__image {
     width: 100%;
+    max-width: 220px;
     aspect-ratio: 1/1;
     object-fit: cover;
+    display: block;
+    margin: 0 auto;
   }
   .collection-card__content {
     padding: 1em;
@@ -98,6 +122,7 @@
     font-weight: bold;
     font-size: 1.1em;
     margin-bottom: 0.2em;
+    text-align: center;
   }
   .collection-card__desc {
     color: #666;
@@ -108,6 +133,7 @@
     display: flex;
     align-items: center;
     gap: 0.5em;
+    justify-content: center;
   }
   .collection-card__price {
     font-weight: bold;
