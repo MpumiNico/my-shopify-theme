@@ -12,17 +12,20 @@
     {% for product in collection.products %}
       <div class="collection-card">
         {% if product.featured_image %}
-          <div class="collection-card__image-wrap">
+          <a href="{{ product.url }}" class="collection-card__image-wrap">
             <img
               class="collection-card__image"
               src="{{ product.featured_image | image_url: width:600, height:800, crop:'center' }}"
               alt="{{ product.title }}"
               loading="lazy"
+              width="600"
+              height="800"
+              style="display: block; margin: 0 auto; background: #000;"
             >
-          </div>
+          </a>
         {% endif %}
         <div class="collection-card__content">
-          <p class="collection-card__title">{{ product.title }}</p>
+          <a href="{{ product.url }}" class="collection-card__title">{{ product.title }}</a>
           <p class="collection-card__price">{{ product.price | money }}</p>
           {% assign color_option = product.options_with_values | where: "name", "Color" | first %}
           {% if color_option %}
@@ -49,7 +52,9 @@
         </div>
       </div>
     {% endfor %}
-    {{ paginate | default_pagination }}
+    <div class="collection-pagination">
+      {{ paginate | default_pagination }}
+    </div>
   {% endpaginate %}
 </div>
 
@@ -98,9 +103,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #fafafa;
+    background: #000; 
     overflow: hidden;
     aspect-ratio: 3/4;
+    text-decoration: none;
   }
   .collection-card__image {
     width: 100%;
@@ -132,6 +138,11 @@
     text-decoration: none;
     letter-spacing: 0.5px;
     text-transform: uppercase;
+    display: block;
+    transition: color 0.2s;
+  }
+  .collection-card__title:hover {
+    color: #ee0979;
   }
   .collection-card__price {
     font-family: 'Roboto', Arial, sans-serif;
@@ -158,6 +169,53 @@
   }
   .color-dot[style*="#fff"] {
     border: 1px solid #bbb;
+  }
+  .collection-pagination,
+  .collection-pagination nav,
+  .collection-pagination ul {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 0.5em;
+    margin: 2em 0 0 0;
+    font-family: 'Montserrat', Arial, sans-serif;
+    text-align: center;
+    list-style: none;
+    padding: 0;
+  }
+
+  .collection-pagination a,
+  .collection-pagination span,
+  .collection-pagination li a,
+  .collection-pagination li span {
+    display: inline-block;
+    padding: 0.5em 1.1em;
+    border-radius: 6px;
+    background: #000;
+    color: #fff !important;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    border: 1px solid #000;
+    margin: 0 2px;
+  }
+
+  .collection-pagination .current,
+  .collection-pagination a:hover,
+  .collection-pagination li span.current,
+  .collection-pagination li a:hover {
+    background: #222;
+    color: #fff !important;
+    border: 1px solid #222;
+  }
+
+  .collection-pagination .deco,
+  .collection-pagination li.deco {
+    background: transparent;
+    color: #bbb !important;
+    border: none;
+    padding: 0.5em 0.7em;
+    font-weight: 700;
   }
   @media (max-width: 700px) {
     .collections {
