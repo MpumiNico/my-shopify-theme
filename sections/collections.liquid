@@ -19,7 +19,7 @@
             class: 'collection-card__image',
             image: collection.featured_image,
             width: 600,
-            height: 600,
+            height: 800,
             crop: 'center'
           %}
         </div>
@@ -28,29 +28,31 @@
       <div class="collection-card__content">
         <p class="collection-card__title">{{ collection.title }}</p>
 
-        {% if collection.description %}
-          <p class="collection-card__desc">{{ collection.description | strip_html | truncatewords: 15 }}</p>
-        {% endif %}
-
         {% assign featured_product = collection.products.first %}
         {% if featured_product %}
-          <div class="collection-card__product">
-            <span class="collection-card__price">
-              {{ featured_product.price | money }}
-            </span>
-            {% assign color_option = featured_product.options_with_values | where: "name", "Color" | first %}
-            {% if color_option %}
-              <div class="collection-card__colors">
-                {% assign max_colors = 3 %}
-                {% for color in color_option.values limit: max_colors %}
-                  <span class="color-dot" style="background-color: {{ color | handle }};" title="{{ color }}"></span>
-                {% endfor %}
-                {% if color_option.values.size > max_colors %}
-                  <span class="color-dot color-dot--more">+{{ color_option.values.size | minus: max_colors }}</span>
+          <p class="collection-card__price">{{ featured_product.price | money }}</p>
+          {% assign color_option = featured_product.options_with_values | where: "name", "Color" | first %}
+          {% if color_option %}
+            <div class="collection-card__colors">
+              {% assign shown_colors = 0 %}
+              {% for color in color_option.values %}
+                {% assign color_downcase = color | downcase %}
+                {% if color_downcase == 'black' or color_downcase == 'white' or color_downcase == 'blue' %}
+                  {% assign shown_colors = shown_colors | plus: 1 %}
+                  {% if color_downcase == 'black' %}
+                    <span class="color-dot" style="background-color: #000;" title="Black"></span>
+                  {% elsif color_downcase == 'white' %}
+                    <span class="color-dot" style="background-color: #fff; border: 1px solid #bbb;" title="White"></span>
+                  {% elsif color_downcase == 'blue' %}
+                    <span class="color-dot" style="background-color: #0074d9;" title="Blue"></span>
+                  {% endif %}
                 {% endif %}
-              </div>
-            {% endif %}
-          </div>
+                {% if shown_colors == 3 %}
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
         {% endif %}
       </div>
     </a>
@@ -62,7 +64,7 @@
     text-align: center;
     font-size: 2.5em;
     font-weight: bold;
-    margin: 1em 0 1.5em 0;
+    margin: 1.5em 0 2em 0;
     background: linear-gradient(90deg, #ff6a00, #ee0979, #00c3ff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -72,30 +74,26 @@
   }
   .collections {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(var(--collection-card-size), 100%), 1fr));
-    gap: var(--grid-gap);
-  }
-  .collections--compact {
-    --collection-card-size: 160px;
-  }
-  .collections--full {
-    --collection-card-size: 280px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--grid-gap, 32px);
+    padding: 2em 0;
   }
   .collection-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    width: 100%;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    transition: box-shadow 0.2s;
+    align-items: center;
     text-decoration: none;
     color: inherit;
+    transition: box-shadow 0.2s;
+    min-height: 420px;
+    position: relative;
   }
   .collection-card:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.13);
   }
   .collection-card__image-wrap {
     width: 100%;
@@ -103,62 +101,76 @@
     justify-content: center;
     align-items: center;
     background: #fafafa;
+    overflow: hidden;
+    aspect-ratio: 3/4;
   }
   .collection-card__image {
     width: 100%;
-    max-width: 220px;
-    aspect-ratio: 1/1;
+    max-width: 260px;
+    height: auto;
     object-fit: cover;
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    border-radius: 0;
     display: block;
-    margin: 0 auto;
+  }
+  .collection-card:hover .collection-card__image {
+    transform: scale(1.07);
   }
   .collection-card__content {
-    padding: 1em;
+    width: 100%;
+    padding: 1.2em 1em 1.5em 1em;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 0.5em;
   }
   .collection-card__title {
-    font-weight: bold;
-    font-size: 1.1em;
-    margin-bottom: 0.2em;
+    font-weight: 600;
+    font-size: 1.15em;
+    margin: 0.5em 0 0.2em 0;
     text-align: center;
-  }
-  .collection-card__desc {
-    color: #666;
-    font-size: 0.95em;
-  }
-  .collection-card__product {
-    margin-top: 0.5em;
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    justify-content: center;
+    color: #222;
+    text-decoration: none;
+    letter-spacing: 0.5px;
   }
   .collection-card__price {
-    font-weight: bold;
-    color: #222;
+    color: #1a1a1a;
+    font-size: 1.05em;
+    font-weight: 500;
+    margin-bottom: 0.4em;
   }
   .collection-card__colors {
     display: flex;
-    gap: 0.25em;
+    gap: 0.4em;
+    justify-content: center;
+    margin-top: 0.2em;
   }
   .color-dot {
     display: inline-block;
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     border: 1px solid #ccc;
     background: #eee;
+    margin: 0;
   }
-  .color-dot--more {
-    background: #f5f5f5;
-    color: #555;
-    font-size: 0.9em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #ccc;
+  .color-dot[style*="#fff"] {
+    border: 1px solid #bbb;
+  }
+  @media (max-width: 700px) {
+    .collections {
+      grid-template-columns: 1fr 1fr;
+      gap: 1em;
+      padding: 1em 0;
+    }
+    .collection-card__image {
+      max-width: 100%;
+    }
+  }
+  @media (max-width: 480px) {
+    .collections {
+      grid-template-columns: 1fr;
+    }
   }
 {% endstylesheet %}
 
@@ -184,7 +196,7 @@
       "max": 50,
       "step": 5,
       "unit": "px",
-      "default": 10
+      "default": 30
     }
   ],
   "presets": [{ "name": "t:general.collections_grid" }]
