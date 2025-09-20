@@ -6,10 +6,22 @@
 {% endcomment %}
 
 <header class="main-header">
-  <h1 class="site-title">
-    <a href="/" class="site-title__link">CLICK CARTEL CLOTHING</a>
-  </h1>
-  <nav class="main-nav">
+  <div class="main-header__top">
+    <button class="main-header__menu" aria-label="Open menu">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect y="4" width="24" height="2" rx="1" fill="#fff"/><rect y="11" width="24" height="2" rx="1" fill="#fff"/><rect y="18" width="24" height="2" rx="1" fill="#fff"/></svg>
+    </button>
+    <a href="/" class="main-header__logo">CLICK CARTEL</a>
+    <form class="main-header__search">
+      <svg width="20" height="20" fill="#aaa" viewBox="0 0 20 20"><circle cx="9" cy="9" r="7" stroke="#aaa" stroke-width="2" fill="none"/><line x1="15" y1="15" x2="19" y2="19" stroke="#aaa" stroke-width="2"/></svg>
+      <input type="text" placeholder="Search products, stores or brands" />
+    </form>
+    <div class="main-header__icons">
+      
+      <a href="#" aria-label="Account"><svg width="22" height="22" fill="#fff" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M12 14c-4.418 0-8 1.79-8 4v2h16v-2c0-2.21-3.582-4-8-4z"/></svg></a>
+      <a href="/cart" aria-label="Cart"><svg width="22" height="22" fill="#fff" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></a>
+    </div>
+  </div>
+  <nav class="main-header__nav">
     <ul>
       <li><a href="/collections/tshirts" {% if collection.handle == 'tshirts' %}class="active"{% endif %}>T-shirts</a></li>
       <li><a href="/collections/hoodies" {% if collection.handle == 'hoodies' %}class="active"{% endif %}>Hoodies</a></li>
@@ -72,239 +84,304 @@
 </div>
 
 {% stylesheet %}
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Roboto:wght@400;500&display=swap');
+.main-header {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 2em;
+  padding: 0;
+}
+.main-header__top {
+  display: flex;
+  align-items: center;
+  background: #111;
+  padding: 0.5em 2em;
+  gap: 1.5em;
+  width: 100%; 
+  box-sizing: border-box; /
+}
+.main-header__menu {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 1em;
+  display: flex;
+  align-items: center;
+}
+.main-header__logo {
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 2em;
+  font-weight: 900;
+  color: #fff;
+  text-decoration: none;
+  margin-right: 2em;
+}
+.main-header__search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #333;
+  border-radius: 2em;
+  padding: 0.3em 1.2em;
+  max-width: 500px;
+  margin: 0 2em;
+}
+.main-header__search svg {
+  margin-right: 0.7em;
+}
+.main-header__search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 1em;
+  width: 100%;
+}
+.main-header__icons {
+  display: flex;
+  align-items: center;
+  gap: 1.2em;
+}
+.main-header__icons a {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  text-decoration: none;
+}
+.main-header__nav {
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  width: 100%;
+}
+.main-header__nav ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5em;
+  list-style: none;
+  margin: 0;
+  padding: 0.7em 2em;
+  overflow-x: auto;
+}
+.main-header__nav a {
+  color: #888;
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 1.05em;
+  text-decoration: none;
+  padding: 0.3em 1em;
+  border-radius: 2em;
+  transition: background 0.2s, color 0.2s;
+}
+.main-header__nav a.active,
+.main-header__nav a:hover {
+  background: #111;
+  color: #fff;
+}
+@media (max-width: 900px) {
+  .main-header__top, .main-header__nav ul {
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+  .main-header__search {
+    max-width: 220px;
+    margin: 0 1em;
+  }
+}
+@media (max-width: 600px) {
+  .main-header__logo {
+    font-size: 1.2em;
+    margin-right: 1em;
+  }
+  .main-header__nav ul {
+    gap: 0.7em;
+    font-size: 0.95em;
+  }
+}
 
+.collections-title {
+  text-align: center;
+  font-size: 2.5em;
+  font-weight: 900;
+  margin: 1.5em 0 2em 0;
+  background: linear-gradient(90deg, #ff6a00, #ee0979, #00c3ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  letter-spacing: 1px;
+  font-family: 'Montserrat', Arial, sans-serif;
+  text-transform: uppercase;
+}
+.collections {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 30px;
+  padding: 2em 0;
+}
+.collection-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.2s;
+  min-height: 420px;
+  position: relative;
+}
+.collection-card:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+}
+.collection-card__image-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000; 
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  text-decoration: none;
+}
+.collection-card__image {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  object-fit: cover;
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+  border-radius: 0;
+  display: block;
+}
+.collection-card:hover .collection-card__image {
+  transform: scale(1.07);
+}
+.collection-card__content {
+  width: 100%;
+  padding: 1.2em 1em 1.5em 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+}
+.collection-card__title {
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 1.15em;
+  margin: 0.5em 0 0.2em 0;
+  text-align: center;
+  color: #222;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: block;
+  transition: color 0.2s;
+}
+.collection-card__title:hover {
+  color: #ee0979;
+}
+.collection-card__price {
+  font-family: 'Roboto', Arial, sans-serif;
+  color: #222;
+  font-size: 1.1em;
+  font-weight: 500;
+  margin-bottom: 0.4em;
+  letter-spacing: 0.5px;
+}
+.collection-card__colors {
+  display: flex;
+  gap: 0.4em;
+  justify-content: center;
+  margin-top: 0.2em;
+}
+.color-dot {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background: #eee;
+  margin: 0;
+}
+.color-dot[style*="#fff"] {
+  border: 1px solid #bbb;
+}
+.collection-pagination,
+.collection-pagination nav,
+.collection-pagination ul {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0.5em;
+  margin: 2em 0 0 0;
+  font-family: 'Montserrat', Arial, sans-serif;
+  text-align: center;
+  list-style: none;
+  padding: 0;
+}
+
+.collection-pagination a,
+.collection-pagination span,
+.collection-pagination li a,
+.collection-pagination li span {
+  display: inline-block;
+  padding: 0.5em 1.1em;
+  border-radius: 6px;
+  background: #000;
+  color: #fff !important;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+  border: 1px solid #000;
+  margin: 0 2px;
+}
+
+.collection-pagination .current,
+.collection-pagination a:hover,
+.collection-pagination li span.current,
+.collection-pagination li a:hover {
+  background: #222;
+  color: #fff !important;
+  border: 1px solid #222;
+}
+
+.collection-pagination .deco,
+.collection-pagination li.deco {
+  background: transparent;
+  color: #bbb !important;
+  border: none;
+  padding: 0.5em 0.7em;
+  font-weight: 700;
+}
+@media (max-width: 700px) {
   .main-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 2em;
-    margin-top: 1.5em;
+    margin-top: 1em;
+    margin-bottom: 1em;
   }
   .site-title {
-    font-family: 'Montserrat', Arial, sans-serif;
-    font-size: 2.8em;
-    font-weight: 900;
-    letter-spacing: 0.12em;
-    margin: 0 0 0.5em 0;
-    background: linear-gradient(90deg, #ff6a00, #ee0979, #00c3ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
-    text-fill-color: transparent;
-    text-transform: uppercase;
-  }
-  .site-title__link {
-    text-decoration: none;
-    color: inherit;
+    font-size: 2em;
   }
   .main-nav ul {
-    display: flex;
-    gap: 2.5em;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .main-nav a {
-    font-family: 'Montserrat', Arial, sans-serif;
-    font-weight: 700;
-    font-size: 1.1em;
-    color: #222;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding-bottom: 0.2em;
-    border-bottom: 2px solid transparent;
-    transition: color 0.2s, border-bottom 0.2s;
-  }
-  .main-nav a:hover,
-  .main-nav a.active {
-    color: #ee0979;
-    border-bottom: 2px solid #ee0979;
-  }
-
-  .collections-title {
-    text-align: center;
-    font-size: 2.5em;
-    font-weight: 900;
-    margin: 1.5em 0 2em 0;
-    background: linear-gradient(90deg, #ff6a00, #ee0979, #00c3ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-fill-color: transparent;
-    letter-spacing: 1px;
-    font-family: 'Montserrat', Arial, sans-serif;
-    text-transform: uppercase;
+    gap: 1.2em;
   }
   .collections {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 30px;
-    padding: 2em 0;
-  }
-  .collection-card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-    transition: box-shadow 0.2s;
-    min-height: 420px;
-    position: relative;
-  }
-  .collection-card:hover {
-    box-shadow: 0 8px 32px rgba(0,0,0,0.13);
-  }
-  .collection-card__image-wrap {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #000; 
-    overflow: hidden;
-    aspect-ratio: 3/4;
-    text-decoration: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
+    padding: 1em 0;
   }
   .collection-card__image {
-    width: 100%;
-    max-width: 260px;
-    height: auto;
-    object-fit: cover;
-    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
-    border-radius: 0;
-    display: block;
+    max-width: 100%;
   }
-  .collection-card:hover .collection-card__image {
-    transform: scale(1.07);
+}
+@media (max-width: 480px) {
+  .collections {
+    grid-template-columns: 1fr;
   }
-  .collection-card__content {
-    width: 100%;
-    padding: 1.2em 1em 1.5em 1em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5em;
-  }
-  .collection-card__title {
-    font-family: 'Montserrat', Arial, sans-serif;
-    font-weight: 700;
-    font-size: 1.15em;
-    margin: 0.5em 0 0.2em 0;
-    text-align: center;
-    color: #222;
-    text-decoration: none;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    display: block;
-    transition: color 0.2s;
-  }
-  .collection-card__title:hover {
-    color: #ee0979;
-  }
-  .collection-card__price {
-    font-family: 'Roboto', Arial, sans-serif;
-    color: #222;
-    font-size: 1.1em;
-    font-weight: 500;
-    margin-bottom: 0.4em;
-    letter-spacing: 0.5px;
-  }
-  .collection-card__colors {
-    display: flex;
-    gap: 0.4em;
-    justify-content: center;
-    margin-top: 0.2em;
-  }
-  .color-dot {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    border: 1px solid #ccc;
-    background: #eee;
-    margin: 0;
-  }
-  .color-dot[style*="#fff"] {
-    border: 1px solid #bbb;
-  }
-  .collection-pagination,
-  .collection-pagination nav,
-  .collection-pagination ul {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 0.5em;
-    margin: 2em 0 0 0;
-    font-family: 'Montserrat', Arial, sans-serif;
-    text-align: center;
-    list-style: none;
-    padding: 0;
-  }
-
-  .collection-pagination a,
-  .collection-pagination span,
-  .collection-pagination li a,
-  .collection-pagination li span {
-    display: inline-block;
-    padding: 0.5em 1.1em;
-    border-radius: 6px;
-    background: #000;
-    color: #fff !important;
-    font-weight: 700;
-    text-decoration: none;
-    transition: background 0.2s, color 0.2s;
-    border: 1px solid #000;
-    margin: 0 2px;
-  }
-
-  .collection-pagination .current,
-  .collection-pagination a:hover,
-  .collection-pagination li span.current,
-  .collection-pagination li a:hover {
-    background: #222;
-    color: #fff !important;
-    border: 1px solid #222;
-  }
-
-  .collection-pagination .deco,
-  .collection-pagination li.deco {
-    background: transparent;
-    color: #bbb !important;
-    border: none;
-    padding: 0.5em 0.7em;
-    font-weight: 700;
-  }
-  @media (max-width: 700px) {
-    .main-header {
-      margin-top: 1em;
-      margin-bottom: 1em;
-    }
-    .site-title {
-      font-size: 2em;
-    }
-    .main-nav ul {
-      gap: 1.2em;
-    }
-    .collections {
-      grid-template-columns: 1fr 1fr;
-      gap: 1em;
-      padding: 1em 0;
-    }
-    .collection-card__image {
-      max-width: 100%;
-    }
-  }
-  @media (max-width: 480px) {
-    .collections {
-      grid-template-columns: 1fr;
-    }
-  }
+}
 {% endstylesheet %}
 
 {% schema %}
