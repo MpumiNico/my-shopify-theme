@@ -5,7 +5,20 @@
   https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
 {% endcomment %}
 
-<h1 class="collections-title">{{ collection.title }}</h1>
+<header class="main-header">
+  <h1 class="site-title">
+    <a href="/" class="site-title__link">CLICK CARTEL CLOTHING</a>
+  </h1>
+  <nav class="main-nav">
+    <ul>
+      <li><a href="/collections/tshirts" {% if collection.handle == 'tshirts' %}class="active"{% endif %}>T-shirts</a></li>
+      <li><a href="/collections/hoodies" {% if collection.handle == 'hoodies' %}class="active"{% endif %}>Hoodies</a></li>
+      <li><a href="/collections/socks" {% if collection.handle == 'socks' %}class="active"{% endif %}>Socks</a></li>
+    </ul>
+  </nav>
+</header>
+
+<h2 class="collections-title">{{ collection.title }}</h2>
 
 <div class="collections">
   {% paginate collection.products by 20 %}
@@ -60,6 +73,56 @@
 
 {% stylesheet %}
   @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Roboto:wght@400;500&display=swap');
+
+  .main-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2em;
+    margin-top: 1.5em;
+  }
+  .site-title {
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-size: 2.8em;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    margin: 0 0 0.5em 0;
+    background: linear-gradient(90deg, #ff6a00, #ee0979, #00c3ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    text-fill-color: transparent;
+    text-transform: uppercase;
+  }
+  .site-title__link {
+    text-decoration: none;
+    color: inherit;
+  }
+  .main-nav ul {
+    display: flex;
+    gap: 2.5em;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .main-nav a {
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1.1em;
+    color: #222;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding-bottom: 0.2em;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-bottom 0.2s;
+  }
+  .main-nav a:hover,
+  .main-nav a.active {
+    color: #ee0979;
+    border-bottom: 2px solid #ee0979;
+  }
 
   .collections-title {
     text-align: center;
@@ -218,6 +281,16 @@
     font-weight: 700;
   }
   @media (max-width: 700px) {
+    .main-header {
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
+    .site-title {
+      font-size: 2em;
+    }
+    .main-nav ul {
+      gap: 1.2em;
+    }
     .collections {
       grid-template-columns: 1fr 1fr;
       gap: 1em;
