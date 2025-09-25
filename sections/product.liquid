@@ -1,42 +1,73 @@
 <div class="product-card">
   <div class="product-card__image-wrap">
     <img class="product-card__image"
-      src="{{ product.featured_image | image_url:width:600, height:600 }}"
+      src="{{ product.featured_image | image_url: width:600, height:600 }}"
       height="600" width="600" alt="{{ product.title }}">
   </div>
+
   <div class="product-card__details">
     <h1 class="product-card__title">{{ product.title }}</h1>
+
     <p class="product-card__price">
       {{ product.price | money }}
     </p>
+
     {% if product.description %}
       <p class="product-card__desc">{{ product.description | strip_html | truncatewords: 30 }}</p>
     {% endif %}
 
     {% form 'product', product %}
+      <!-- Quantity -->
       <div class="product-card__form-row">
         <label for="quantity">Quantity</label>
         <input type="number" id="quantity" name="quantity" min="1" value="1" class="product-card__qty">
       </div>
-      <div class="product-card__form-row">
-        <label for="variant">Variant</label>
-        <select name="id" id="variant" class="product-card__select">
-          {% for variant in product.variants %}
-            <option
-              value="{{ variant.id }}"
-              {% if variant == current_variant %}
-                selected="selected"
-              {% endif %}
-            >
-              {{ variant.title }} - {{ variant.price | money }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
+
+      <!-- Loop through product options -->
+      {% for option in product.options_with_values %}
+        <div class="product-card__form-row">
+          <span>{{ option.name }}</span>
+
+          {% if option.name == 'Color' %}
+            <!-- Color swatches -->
+            <div class="product-card__swatches">
+              {% for value in option.values %}
+                <label class="swatch">
+                  <input
+                    type="radio"
+                    name="options[{{ option.name }}]"
+                    value="{{ value }}"
+                    {% if option.selected_value == value %} checked {% endif %}
+                  >
+                  <span>{{ value }}</span>
+                </label>
+              {% endfor %}
+            </div>
+
+          {% elsif option.name == 'Size' %}
+            <!-- Size buttons -->
+            <div class="product-card__sizes">
+              {% for value in option.values %}
+                <label class="size-btn">
+                  <input
+                    type="radio"
+                    name="options[{{ option.name }}]"
+                    value="{{ value }}"
+                    {% if option.selected_value == value %} checked {% endif %}
+                  >
+                  <span>{{ value }}</span>
+                </label>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
       <button type="submit" class="product-card__add-btn">Add to cart</button>
     {% endform %}
   </div>
 </div>
+
 
 {% stylesheet %}
 .product-card {
@@ -91,14 +122,60 @@
   flex-direction: column;
   margin-bottom: 1em;
 }
-.product-card__qty,
-.product-card__select {
+.product-card__qty {
   padding: 0.5em;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 1em;
   margin-top: 0.3em;
 }
+
+/* Color swatches */
+.product-card__swatches {
+  display: flex;
+  gap: 10px;
+  margin-top: 0.5em;
+}
+.swatch input {
+  display: none;
+}
+.swatch span {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.swatch input:checked + span {
+  border-color: #000;
+  background: #000;
+  color: #fff;
+}
+
+/* Size buttons */
+.product-card__sizes {
+  display: flex;
+  gap: 10px;
+  margin-top: 0.5em;
+}
+.size-btn input {
+  display: none;
+}
+.size-btn span {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.size-btn input:checked + span {
+  border-color: #000;
+  background: #000;
+  color: #fff;
+}
+
 .product-card__add-btn {
   background: #222;
   color: #fff;
@@ -126,12 +203,6 @@
 }
 {% endstylesheet %}
 
-{% comment %}
-  This section is used in the product template to render product page with
-  media, content, and add-to-cart form.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/product
-{% endcomment %}
 
 {% schema %}
 {
