@@ -17,19 +17,19 @@
     {% endif %}
 
     {% form 'product', product %}
-      <!-- Quantity -->
+      
       <div class="product-card__form-row">
         <label for="quantity">Quantity</label>
         <input type="number" id="quantity" name="quantity" min="1" value="1" class="product-card__qty">
       </div>
 
-      <!-- Loop through product options -->
+      
       {% for option in product.options_with_values %}
         <div class="product-card__form-row">
           <span>{{ option.name }}</span>
 
           {% if option.name == 'Color' %}
-            <!-- Color swatches -->
+            
             <div class="product-card__swatches">
               {% for value in option.values %}
                 <label class="swatch">
