@@ -21,7 +21,7 @@
           <div class="cart-item__details">
             <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
 
-            <!-- Size -->
+            
             <div class="cart-item__size">
               {% for option in item.options_with_values %}
                 {% if option.name contains 'Size' %}
