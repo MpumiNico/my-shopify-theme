@@ -2,6 +2,10 @@
 <div class="hero-banner">
   <div class="hero-image">
     <img src="{{ 'photoshoot.jpg' | asset_url }}" width="100" height="100">
+    <div class="hero-content">
+    
+    <a href="{{ collection.url }}" class="hero-btn">Shop now</a>
+  </div>
   </div>
   
 </div>
@@ -57,6 +61,36 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
+}
+
+.hero-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 2;
+  color: white;
+}
+
+
+.hero-btn {
+  display: inline-block;
+  padding: 12px 30px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.hero-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
 }
 
 .highlights {
