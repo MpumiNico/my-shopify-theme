@@ -1,215 +1,164 @@
-<div class="product-card">
-  <div class="product-card__image-wrap">
-    <img class="product-card__image"
-      src="{{ product.featured_image | image_url: width:600, height:600 }}"
-      height="600" width="600" alt="{{ product.title }}">
+<div class="cartel-product-card">
+  <div class="cartel-product-card__image-wrap">
+    <img class="cartel-product-card__image"
+         src="{{ product.featured_image | image_url: width:600, height:600 }}"
+         height="600" width="600" alt="{{ product.title }}">
   </div>
-
-  <div class="product-card__details">
-    <h1 class="product-card__title">{{ product.title }}</h1>
-
-    <p class="product-card__price">
-      {{ product.price | money }}
-    </p>
-
+  <div class="cartel-product-card__details">
+    <h1 class="cartel-product-card__title">{{ product.title }}</h1>
+    <p class="cartel-product-card__price">{{ product.price | money }}</p>
     {% if product.description %}
-      <p class="product-card__desc">{{ product.description | strip_html | truncatewords: 30 }}</p>
+      <p class="cartel-product-card__desc">{{ product.description | strip_html | truncatewords: 30 }}</p>
     {% endif %}
-
     {% form 'product', product %}
-      
-      <div class="product-card__form-row">
-        <label for="quantity">Quantity</label>
-        <input type="number" id="quantity" name="quantity" min="1" value="1" class="product-card__qty">
-      </div>
-
-      
       {% for option in product.options_with_values %}
-        <div class="product-card__form-row">
-          <span>{{ option.name }}</span>
-
-          {% if option.name == 'Color' %}
-            
-            <div class="product-card__swatches">
-              {% for value in option.values %}
-                <label class="swatch">
-                  <input
-                    type="radio"
-                    name="options[{{ option.name }}]"
-                    value="{{ value }}"
-                    {% if option.selected_value == value %} checked {% endif %}
-                  >
-                  <span>{{ value }}</span>
-                </label>
-              {% endfor %}
-            </div>
-
-          {% elsif option.name == 'Size' %}
-            <!-- Size buttons -->
-            <div class="product-card__sizes">
-              {% for value in option.values %}
-                <label class="size-btn">
-                  <input
-                    type="radio"
-                    name="options[{{ option.name }}]"
-                    value="{{ value }}"
-                    {% if option.selected_value == value %} checked {% endif %}
-                  >
-                  <span>{{ value }}</span>
-                </label>
-              {% endfor %}
-            </div>
-          {% endif %}
+        <div class="cartel-product-card__form-row">
+          <span class="cartel-product-card__option-label">{{ option.name }}:</span>
+          <div class="cartel-product-card__option-values">
+            {% for value in option.values %}
+              <label class="cartel-option-btn">
+                <input type="radio"
+                       name="options[{{ option.name }}]"
+                       value="{{ value }}"
+                       {% if option.selected_value == value %} checked {% endif %}>
+                <span>{{ value }}</span>
+              </label>
+            {% endfor %}
+          </div>
         </div>
       {% endfor %}
-
-      <button type="submit" class="product-card__add-btn">Add to cart</button>
+      <div class="cartel-product-card__form-row--actions">
+        <label for="quantity">Qty</label>
+        {% comment %} <input type="number" id="quantity" name="quantity" min="1" value="1" class="cartel-product-card__qty"> {% endcomment %}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        <button type="submit" class="cartel-product-card__add-btn">Add to cart</button>
+      </div>
     {% endform %}
   </div>
 </div>
-
-
 {% stylesheet %}
-.product-card {
+.cartel-product-card {
   display: flex;
   flex-wrap: wrap;
-  gap: 2em;
+  gap: 2.5em;
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 8px 24px rgba(44,62,80,0.08);
   padding: 2em;
-  max-width: 800px;
+  max-width: 820px;
   margin: 2em auto;
 }
-.product-card__image-wrap {
-  flex: 1 1 320px;
+.cartel-product-card__image-wrap {
+  flex: 1 1 340px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.product-card__image {
+.cartel-product-card__image {
   width: 100%;
-  max-width: 400px;
-  border-radius: 8px;
+  max-width: 440px;
+  border-radius: 12px;
   object-fit: cover;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 18px rgba(44,62,80,0.06);
 }
-.product-card__details {
-  flex: 1 1 320px;
+.cartel-product-card__details {
+  flex: 1 1 280px;
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 1.4em;
   justify-content: center;
 }
-.product-card__title {
-  font-size: 2em;
-  font-weight: bold;
+.cartel-product-card__title {
+  font-size: 2.2em;
+  font-weight: 800;
   margin-bottom: 0.2em;
+  color: #263238;
 }
-.product-card__price {
-  font-size: 1.3em;
-  color: #1a1a1a;
+.cartel-product-card__price {
+  font-size: 1.5em;
+  color: #e7515a;
   font-weight: bold;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.6em;
 }
-.product-card__desc {
-  color: #555;
-  font-size: 1em;
-  margin-bottom: 1em;
+.cartel-product-card__desc {
+  color: #56696d;
+  font-size: 1.08em;
 }
-.product-card__form-row {
+.cartel-product-card__form-row {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1em;
+  margin-bottom: 1.25em;
 }
-.product-card__qty {
-  padding: 0.5em;
-  border: 1px solid #ddd;
+.cartel-product-card__option-label {
+  font-weight: 700;
+  font-size: 1em;
+  margin-bottom: 0.8em;
+}
+.cartel-product-card__option-values {
+  display: flex;
+  gap: 12px;
+}
+.cartel-option-btn input {
+  display: none;
+}
+.cartel-option-btn span {
+  display: inline-block;
+  padding: 10px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 15px;
+  background: #f6f7f9;
+  font-weight: 600;
+  color: #263238;
+  transition: background 0.18s, border-color 0.18s;
+}
+.cartel-option-btn input:checked + span {
+  border-color: #e7515a;
+  background: #f3e1e0;
+  color: #e7515a;
+}
+.cartel-product-card__form-row--actions {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  margin-top: 18px;
+}
+.cartel-product-card__qty {
+  width: 60px;
+  padding: 0.35em;
+  border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 1em;
-  margin-top: 0.3em;
+  text-align: center;
 }
-
-/* Color swatches */
-.product-card__swatches {
-  display: flex;
-  gap: 10px;
-  margin-top: 0.5em;
-}
-.swatch input {
-  display: none;
-}
-.swatch span {
-  display: inline-block;
-  padding: 8px 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-}
-.swatch input:checked + span {
-  border-color: #000;
-  background: #000;
-  color: #fff;
-}
-
-/* Size buttons */
-.product-card__sizes {
-  display: flex;
-  gap: 10px;
-  margin-top: 0.5em;
-}
-.size-btn input {
-  display: none;
-}
-.size-btn span {
-  display: inline-block;
-  padding: 8px 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-}
-.size-btn input:checked + span {
-  border-color: #000;
-  background: #000;
-  color: #fff;
-}
-
-.product-card__add-btn {
-  background: #222;
+.cartel-product-card__add-btn {
+  background: #e7515a;
   color: #fff;
   border: none;
-  border-radius: 6px;
-  padding: 0.8em 2em;
-  font-size: 1.1em;
+  border-radius: 7px;
+  padding: 0.85em 2.4em;
+  font-size: 1.15em;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.19s;
+  box-shadow: 0 2px 11px rgba(44,62,80,0.07);
 }
-.product-card__add-btn:hover {
-  background: #444;
+.cartel-product-card__add-btn:hover {
+  background: #b7232e;
 }
 @media (max-width: 700px) {
-  .product-card {
+  .cartel-product-card {
     flex-direction: column;
     padding: 1em;
   }
-  .product-card__image-wrap,
-  .product-card__details {
+  .cartel-product-card__image-wrap,
+  .cartel-product-card__details {
     flex: 1 1 100%;
     max-width: 100%;
   }
+  .cartel-product-card__title { font-size: 1.7em; }
+  .cartel-product-card__price { font-size: 1.2em; }
 }
-{% endstylesheet %}
 
-
-{% schema %}
-{
-  "name": "t:general.product",
-  "settings": [],
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  }
-}
-{% endschema %}
+{%endstylesheet %}

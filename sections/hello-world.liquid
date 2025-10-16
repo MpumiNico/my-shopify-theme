@@ -1,7 +1,7 @@
 {% comment %} Welcome to Shopify theme development! {% endcomment %}
 <div class="hero-banner">
   <div class="hero-image">
-    <img src="{{ 'photoshoot.jpg' | asset_url }}" width="100" height="100">
+    <img src="{{ 'Image.png' | asset_url }}" width="100" height="100">
     <div class="hero-content">
     
     <a href="{{ collection.url }}" class="hero-btn">Shop now</a>
@@ -10,32 +10,47 @@
   
 </div>
 
-<div class="highlights">
-  <div class="highlight">
-    <h3>Key Concepts</h3>
-    <p class="highlight-description">
-      Shopify themes are a package of template files, building blocks, and supporting assets. Use these building blocks to create modular, customizable themes.
-    </p>
-    <p>{{ 'Learn more about key concepts' | link_to: 'https://shopify.dev/docs/storefronts/themes/architecture' }}</p>
-  </div>
-  
-  <div class="highlight">
-    <h3>Liquid</h3>
-    <p class="highlight-description">
-      The Liquid templating language is the backbone of Shopify themes, and is used to load dynamic content on storefronts. Extend Liquid objects to store and present custom data using metafields.
-    </p>
-    <p>{{ 'View the Liquid reference' | link_to: 'https://shopify.dev/docs/api/liquid' }}</p>
-  </div>
-  
-  <div class="highlight">
-    <h3>Best Practices</h3>
-    <p class="highlight-description">
-      To optimize your theme development experience, Shopify has established a set of best practices that you can refer to when developing your theme and setting up your toolchains and processes.
-    </p>
-    <p>{{ 'Follow best practices' | link_to: 'https://shopify.dev/docs/storefronts/themes/best-practices' }}</p>
-  </div>
-</div>
 
+<div class="product-slideshow" data-center-mode="true" data-dots-position="underneath">
+  <button class="slideshow-prev" aria-label="Previous slide">‹</button>
+
+  <div class="slides-wrap">
+    <ul class="slides">
+      {% for product in collections.all.products limit:14 %}
+        <li class="slide">
+          <a href="{{ product.url }}" class="slide-link">
+            {% if product.featured_image %}
+              <img
+                src="{{ product.featured_image | image_url: width:400, height:400, crop: 'center' }}"
+                alt="{{ product.title }}"
+                class="slide-image"
+                width="400"
+                height="400"
+                loading="lazy"
+              >
+            {% else %}
+              <div class="slide-no-image">No image</div>
+            {% endif %}
+            <div class="slide-info">
+              <h3 class="slide-title">{{ product.title }}</h3>
+              <p class="slide-price">
+                {% if product.price_min == product.price_max %}
+                  {{ product.price_min | money }}
+                {% else %}
+                  {{ product.price_min | money }} - {{ product.price_max | money }}
+                {% endif %}
+              </p>
+            </div>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <button class="slideshow-next" aria-label="Next slide">›</button>
+
+  
+</div>
 {% stylesheet %}
 
 .hero-banner {
@@ -93,89 +108,248 @@
   transform: translateY(-2px);
 }
 
-.highlights {
-  display: grid;
-  gap: 2rem;
-  grid-template-columns: repeat(3, 1fr);
-  margin-top: 4rem;
-  padding: 0 2rem;
+
+
+.product-slideshow {
+  width: 100%;
   max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 3rem auto 0;
+  padding: 0 48px;                
+  position: relative;
+  box-sizing: border-box;
 }
 
 
-@media (max-width: 768px) {
-  .hero-banner {
-    height: 60vh;
-    min-height: 350px;
-  }
-  
-  
-  .highlights {
-    grid-template-columns: 1fr;
-    padding: 0 1rem;
-    margin-top: 3rem;
-  }
+.slideshow-prev,
+.slideshow-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  cursor: pointer;
+  border: none;
+}
+.slideshow-prev { left: 8px; }
+.slideshow-next { right: 8px; }
+
+
+.slides-wrap {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 0;
 }
 
 
-
-.highlight {
+.slides {
   display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 24px;
-  border-radius: 8px;
-  background-color: #eef3ff;
-  color: rgb(92, 95, 98);
-  line-height: 1.4;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex-direction: row;
+  gap: 16px;
+  transition: transform 300ms ease;
+  will-change: transform;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: stretch;
+  pointer-events: none; 
 }
 
-.highlight:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+
+.slide {
+  flex: 0 0 auto; 
+  min-width: 260px;
+  max-width: 320px;
+  box-sizing: border-box;
+  pointer-events: auto; 
 }
 
-.highlight > * + * {
-  margin-top: 1rem;
-}
 
-.highlight h3 {
-  font-size: 1rem;
-  color: rgb(32, 34, 35);
-}
-
-.highlight-description {
-  flex: 1 1;
-}
-
-.highlight a {
+.slideshow-dots.underneath {
   display: flex;
-  width: fit-content;
-  background-color: rgb(250, 251, 251);
-  box-shadow: rgba(0, 0, 0, 0.2) 0px -3px 0px 0px inset, rgba(255, 255, 255, 0.9) 0px 2px 0px 0px inset;
-  border: 1px solid rgb(140, 145, 150);
-  border-radius: 4px;
-  color: rgb(92, 95, 98);
-  padding: 3px 10px 5px;
+  justify-content: center;
+  gap: 8px;
+  margin: 14px 0 0 0;
+  position: relative;
+  z-index: 40;
+}
+.slideshow-dots.underneath .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ddd;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.slideshow-dots.underneath .dot.active { background: #111; }
+
+
+@media (max-width: 1000px) {
+  .product-slideshow { padding: 0 28px; }
+  .slide { min-width: 220px; }
+  .slide-image { height: 200px; }
+}
+@media (max-width: 700px) {
+  .product-slideshow { padding: 0 12px; }
+  .slideshow-prev, .slideshow-next { display: none; }
+  .slide { min-width: calc(100% - 40px); max-width: calc(100% - 40px); }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+
+.product-slideshow,
+.product-slideshow .slide-info,
+.product-slideshow .slide-title,
+.product-slideshow .slide-price,
+.product-slideshow a {
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  color: #000 !important;
+  text-decoration: none !important;
+}
+
+
+.product-slideshow a:hover,
+.product-slideshow a:focus,
+.product-slideshow a:active {
+  text-decoration: none !important;
+  color: #000 !important;
+}
+
+
+.slide-title {
+  color: #000 !important;
+  font-weight: 700;
   text-decoration: none;
-  transition: background-color 0.2s ease;
 }
 
-.highlight a:hover {
-  background-color: rgb(240, 241, 241);
+
+.slide-price {
+  color: #111 !important;
+  font-weight: 600;
+}
+
+
+.slides a {
+  -webkit-text-decoration-skip: none;
+  text-decoration-skip-ink: none;
+  text-underline-offset: 2px;
+  text-decoration-style: solid;
+  text-decoration-color: transparent;
 }
 {% endstylesheet %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const slideshow = document.querySelector('.product-slideshow');
+  if (!slideshow) return;
 
+  const slidesWrap = slideshow.querySelector('.slides-wrap');
+  const slidesEl = slideshow.querySelector('.slides');
+  let slides = Array.from(slidesEl.children);
+  const prev = slideshow.querySelector('.slideshow-prev');
+  const next = slideshow.querySelector('.slideshow-next');
+
+  const centerMode = slideshow.dataset.centerMode === 'true';
+  const dotsPosition = (slideshow.dataset.dotsPosition || 'underneath'); 
+
+  
+  const dotsWrap = document.createElement('div');
+  dotsWrap.className = 'slideshow-dots ' + (dotsPosition === 'underneath' ? 'underneath' : 'overlay');
+
+  
+  if (dotsPosition === 'underneath') {
+    slidesWrap.parentNode.insertBefore(dotsWrap, slidesWrap.nextSibling);
+  } else {
+    slideshow.appendChild(dotsWrap);
+  }
+
+  function perView() {
+    const w = window.innerWidth;
+    if (centerMode && w >= 1000) return 1;
+    if (w < 700) return 1;
+    if (w < 1000) return 2;
+    return 3;
+  }
+
+  let visible = perView();
+  let index = 0;
+
+  function renderDots() {
+    slides = Array.from(slidesEl.children);
+    dotsWrap.innerHTML = '';
+    const pages = Math.max(1, Math.ceil(slides.length / visible));
+    for (let i = 0; i < pages; i++) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'dot' + (i === Math.floor(index / visible) ? ' active' : '');
+      btn.addEventListener('click', () => {
+        index = i * visible;
+        update();
+      });
+      dotsWrap.appendChild(btn);
+    }
+  }
+
+  function update() {
+    slides = Array.from(slidesEl.children);
+    visible = perView();
+    const gap = parseInt(getComputedStyle(slidesEl).gap) || 16;
+    const slideRect = slides[0] ? slides[0].getBoundingClientRect() : { width: 300 };
+    const slideWidth = slideRect.width + gap;
+
+    if (centerMode && window.innerWidth >= 1000) {
+      index = Math.max(0, Math.min(index, slides.length - 1));
+      const wrapWidth = slidesWrap.getBoundingClientRect().width;
+      const offset = (wrapWidth - slideRect.width) / 2;
+      slidesEl.style.transform = `translateX(${-(index * slideWidth) + offset}px)`;
+    } else {
+      index = Math.max(0, Math.min(index, Math.max(0, slides.length - visible)));
+      slidesEl.style.transform = `translateX(${-(index * slideWidth)}px)`;
+    }
+
+    const activeDot = Math.floor(index / visible);
+    Array.from(dotsWrap.children).forEach((d, i) => {
+      d.classList.toggle('active', i === activeDot);
+    });
+  }
+
+
+  if (prev) prev.addEventListener('click', () => {
+    if (centerMode && window.innerWidth >= 1000) index = Math.max(0, index - 1);
+    else index = Math.max(0, index - visible);
+    update();
+  });
+  if (next) next.addEventListener('click', () => {
+    if (centerMode && window.innerWidth >= 1000) index = Math.min(slides.length - 1, index + 1);
+    else index = Math.min(slides.length - visible, index + visible);
+    update();
+  });
+
+  window.addEventListener('resize', () => {
+    update();
+    renderDots();
+  });
+
+  renderDots();
+  setTimeout(update, 120);
+});
+</script>
 {% schema %}
 {
   "name": "Hello World",
   "settings": [],
   "presets": [
     {
-      "name": "Hello World Template", 
+      "name": "Hello World Template",
       "category": "Demo"
     }
   ]
